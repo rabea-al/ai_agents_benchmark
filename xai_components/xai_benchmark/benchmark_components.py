@@ -14,6 +14,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from translate import Translator
 from PIL import Image
+import openai
+from openai import OpenAI
+from slack_sdk import WebClient
 
 @xai_component
 class AgentBenchmarkRun(Component):
@@ -816,3 +819,79 @@ class ExtractChartDetails(Component):
         print(f"Report Data: {self.report_data.value}")
         print(f"Output Folder: {self.output_folder.value}")
 
+@xai_component
+class OpenAIAuthorize(Component):
+    """Sets the organization and API key for the OpenAI client and creates an OpenAI client.
+
+    This component checks if the API key should be fetched from the environment variables or from the provided input.
+    It then creates an OpenAI client using the API key and stores the client in the context (`ctx`) for use by other components.
+
+    #### Reference:
+    - [OpenAI API](https://platform.openai.com/docs/api-reference/authentication)
+
+    ##### inPorts:
+    - organization: Organization name id for OpenAI API.
+    - api_key: API key for the OpenAI API.
+    - from_env: Boolean value indicating whether the API key is to be fetched from environment variables.
+
+    """
+    organization: InArg[secret]
+    base_url: InArg[str]
+    api_key: InArg[secret]
+    from_env: InArg[bool]
+
+    def execute(self, ctx) -> None:
+        openai.organization = self.organization.value
+        openai.base_url= self.base_url.value
+        if self.from_env.value:
+            openai.api_key = os.getenv("OPENAI_API_KEY")
+        else:
+            openai.api_key = self.api_key.value
+
+        client = OpenAI(api_key=self.api_key.value)
+        ctx['client'] = client
+        ctx['openai_api_key'] = openai.api_key
+
+@xai_component
+class SlackClient(Component):
+    """
+    A component that initializes a Slack WebClient with the provided `slack_bot_token`. The created client is then added to the context for further use by other components.
+
+    ## Inputs
+    - `slack_bot_token` (optional): The Slack bot token used to authenticate the WebClient. If not provided, it will try to read the token from the environment variable `SLACK_BOT_TOKEN`.
+
+    ## Outputs
+    - Adds the `slack_client` object to the context for other components to use.
+    """
+    slack_bot_token: InArg[secret]
+
+    def execute(self, ctx) -> None:
+        slack_bot_token = os.getenv("SLACK_BOT_TOKEN") if self.slack_bot_token.value is None else self.slack_bot_token.value
+        slack_client = WebClient(slack_bot_token)
+        ctx.update({'slack_client':slack_client})
+
+@xai_component
+class SlackSendMessageToServerAndChannel(Component):
+    """
+    A component that sends a message to a specific server and channel in Slack.
+
+    ## Inputs
+    - `server_url`: The URL of the server to send the message to.
+    - `channel_id`: The ID of the channel in the server to send the message to.
+    - `message`: The message content to be sent.
+
+    ## Requirements
+    - `slack_client` instance in the context (created by `SlackClient` component).
+    """
+    server_url: InArg[str]
+    channel_id: InArg[str]
+    message: InArg[str]
+
+    def execute(self, ctx) -> None:
+        slack_client = ctx['slack_client']
+        server_url = self.server_url.value
+        channel_id = self.channel_id.value
+        message = self.message.value
+
+        response = slack_client.chat_postMessage(channel=channel_id, text=message)
+        print(f"Message sent to server {server_url} and channel {channel_id}: {message}")
