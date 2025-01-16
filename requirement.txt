@@ -1,0 +1,5 @@
+xircuits
+matplotlib
+pandas
+translate
+openpyxl
