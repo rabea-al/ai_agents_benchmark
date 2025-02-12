@@ -1,0 +1,11 @@
+[
+    {
+        "prompt": "Translate the text from QA.txt into Japanese, answer the questions in the file, and save the answers in the translate folder as japanese_lan.txt and send summary of result to Slack"
+    },
+    {
+        "prompt": "Convert all images in the new_dir folder from JPEG to PNG and save them in the conv folder and send summary of result to Slack"
+    },
+    {
+        "prompt": "Read the documents from the financial_docs folder, generate the financial report, and generate the charts, After that, save the financial report in the report_55 folder as rr.txt and send summary of result to Slack"
+    }
+]

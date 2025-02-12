@@ -1,0 +1,7 @@
+crewai
+langchain-community
+pandas
+matplotlib
+Pillow
+deepl
+numpy

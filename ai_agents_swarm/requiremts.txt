@@ -1,0 +1,8 @@
+git+https://github.com/openai/swarm.git
+deepl
+pandas
+matplotlib
+Pillow
+slack_sdk
+python-dotenv
+openpyxl

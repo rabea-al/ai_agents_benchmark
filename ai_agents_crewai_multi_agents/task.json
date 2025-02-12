@@ -1,0 +1,53 @@
+{
+    "tasks": [
+        {
+            "task_description": "Convert images from JPEG to PNG in the 'new_dir' folder and save them in 'conv' folder.",
+            "task_type": "image_conversion",
+            "input_files": {
+                "image1.jpeg": "data/screenshots/agent_example_result.jpeg",
+                "image2.jpeg": "data/screenshots/agent_example.jpeg",
+                "image3.jpeg": "data/screenshots/AgentInit.jpeg"
+            },
+            "output_files": {
+                "image1.png": "my_image/agent_example_result.png",
+                "image2.png": "my_image/agent_example.png",
+                "image3.png": "my_image/AgentInit.png"
+
+            }
+        },
+        {
+            "task_description": "Translate the text inside the file QA.txt into Japanese, then answer the translated questions and save the answers in the translate folder in a file named answers.txt, and send summary to Slack.",
+            "task_type": "translation",
+            "input_files": {
+                "QA.txt": "data/QA.txt"
+            },
+            "output_files": {
+                "translated_file": "translate/answers.txt"
+            }
+        },
+        {
+            "task_description": "Generate charts from financial data and save them in the charts folder.",
+            "task_type": "chart_generation",
+            "input_files": {
+                "financial_data.json": "report_2025/report.json"
+            },
+            "output_files": {
+                "chart1.png": "report_2025/total_revenue_vs_expenses.png",
+                "chart2.png": "report_2025/regional_performance.png",
+                "chart3.png": "report_2025/net_profit_by_department.png"
+
+            }
+        },
+        {
+            "task_description": "Read financial data and generate a report, save it in report_55/rr.txt.",
+            "task_type": "report_generation",
+            "input_files": {
+                "financial_doc1": "data/financial_docs/realistic_financial_data.csv",
+                "financial_doc2": "data/financial_docs/realistic_financial_data.xlsx"
+            },
+            "output_files": {
+                "report": "report_2025/report.txt"
+            }
+        }
+    ]
+}

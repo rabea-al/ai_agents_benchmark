@@ -1,0 +1,7 @@
+xircuits
+matplotlib
+pandas
+translate
+openpyxl
+slack_sdk
+openai
